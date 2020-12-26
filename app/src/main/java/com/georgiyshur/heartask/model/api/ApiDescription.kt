@@ -9,7 +9,7 @@ import retrofit2.http.Query
  */
 interface ApiDescription {
 
-    @GET("feed")
+    @GET("feed/")
     suspend fun feed(
         @Query("page") page: Int = 1,
         @Query("count") count: Int = 30

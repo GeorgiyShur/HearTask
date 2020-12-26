@@ -13,6 +13,12 @@ object TestData {
         createSong(4),
     )
 
+    val ARTISTS = listOf(
+        createArtist(0),
+        createArtist(1),
+        createArtist(2)
+    )
+
     fun createArtist(id: Int = 0): Artist {
         return Artist(
             id = id.toString(),
