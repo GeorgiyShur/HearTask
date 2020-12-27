@@ -10,10 +10,16 @@ import androidx.navigation.compose.navigate
 class Navigation(navController: NavHostController) {
 
     companion object {
-        const val Artists = "artists"
+        const val ARTISTS = "artists"
+
+        const val ARG_ARTIST_ID = "artistId"
     }
 
-    val toSongs: (Int) -> Unit = { artistId ->
-        navController.navigate("$Artists/$artistId")
+    val toSongs: (String) -> Unit = { artistId ->
+        navController.navigate("$ARTISTS/$artistId")
+    }
+
+    val back: () -> Unit = {
+        navController.popBackStack()
     }
 }

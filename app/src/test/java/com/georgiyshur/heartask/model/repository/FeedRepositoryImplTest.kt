@@ -6,8 +6,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -39,14 +39,14 @@ class FeedRepositoryImplTest {
     }
 
     @Test
-    fun `Should provide correct data from API`() = runBlockingTest {
+    fun `Should provide correct data from API`() = runBlocking {
         val feed = underTest.getFeed()
 
         assertEquals(TestData.FEED, feed)
     }
 
     @Test
-    fun `Should not call API again when data is cached`() = runBlockingTest {
+    fun `Should not call API again when data is cached`() = runBlocking {
         underTest.getFeed()
         underTest.getFeed()
 

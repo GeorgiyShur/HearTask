@@ -12,20 +12,20 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * Tests for [GetSongsForArtistUseCaseImpl].
+ * Tests for [GetArtistByIdUseCaseImpl].
  */
-class GetSongsForArtistUseCaseImplTest {
+class GetArtistByIdUseCaseImplTest {
 
     private val feedRepository = object : FeedRepository {
         override suspend fun getFeed() = TestData.FEED
     }
 
-    private lateinit var underTest: GetSongsForArtistUseCaseImpl
+    private lateinit var underTest: GetArtistByIdUseCaseImpl
 
     @Before
     fun setup() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-        underTest = GetSongsForArtistUseCaseImpl(
+        underTest = GetArtistByIdUseCaseImpl(
             feedRepository = feedRepository
         )
     }
@@ -36,15 +36,12 @@ class GetSongsForArtistUseCaseImplTest {
     }
 
     @Test
-    fun `Should provide songs of particular artist`() = runBlockingTest {
-        val artists = underTest("0")
+    fun `Should provide artist by ID`() = runBlockingTest {
+        val artist = underTest("0")
 
         assertEquals(
-            listOf(
-                TestData.createSong(0),
-                TestData.createSong(3),
-            ),
-            artists
+            TestData.createArtist(0),
+            artist
         )
     }
 }

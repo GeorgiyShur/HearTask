@@ -1,10 +1,7 @@
 package com.georgiyshur.heartask.di
 
 import com.georgiyshur.heartask.model.repository.FeedRepository
-import com.georgiyshur.heartask.model.usecase.GetArtistsUseCase
-import com.georgiyshur.heartask.model.usecase.GetArtistsUseCaseImpl
-import com.georgiyshur.heartask.model.usecase.GetSongsForArtistUseCase
-import com.georgiyshur.heartask.model.usecase.GetSongsForArtistUseCaseImpl
+import com.georgiyshur.heartask.model.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +16,12 @@ class UseCaseModule {
     @ActivityRetainedScoped
     fun provideGetArtistsUseCase(feedRepository: FeedRepository): GetArtistsUseCase {
         return GetArtistsUseCaseImpl(feedRepository)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideGetArtistByIdUseCase(feedRepository: FeedRepository): GetArtistByIdUseCase {
+        return GetArtistByIdUseCaseImpl(feedRepository)
     }
 
     @Provides

@@ -62,7 +62,6 @@ class ArtistsViewModelTest {
         )
     }
 
-
     private class GetArtistsUseCaseFake(private val error: Throwable? = null) : GetArtistsUseCase {
 
         override suspend fun invoke(): List<Artist> {
