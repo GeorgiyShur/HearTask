@@ -65,6 +65,7 @@ dependencies {
     def lifecycleVersion = "2.3.0-rc01"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycleVersion"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
     def composeVersion = "1.0.0-alpha09"
     implementation "androidx.compose.ui:ui:$composeVersion"
@@ -83,6 +84,12 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
+
+    // ExoPlayer
+    def exoPlayerVersion = "2.12.2"
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:extension-mediasession:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import com.georgiyshur.heartask.model.PlaybackListener
 import com.georgiyshur.heartask.ui.artists.ArtistsScreen
 import com.georgiyshur.heartask.ui.songs.ArtistSongsScreen
 import com.georgiyshur.heartask.ui.theme.HearTheme
@@ -16,7 +17,8 @@ import com.georgiyshur.heartask.viewmodel.ArtistsViewModel
 
 @Composable
 fun MainScreen(
-    artistSongsViewModelFactory: ArtistSongsViewModel.AssistedFactory // Temporary workaround, see MainActivity for description
+    artistSongsViewModelFactory: ArtistSongsViewModel.AssistedFactory, // Temporary workaround, see MainActivity for description
+    playbackListener: PlaybackListener
 ) {
     val navController = rememberNavController()
     val navigation = remember(navController) { Navigation(navController) }
@@ -49,6 +51,7 @@ fun MainScreen(
                 ArtistSongsScreen(
                     artistId = backStackEntry.arguments?.getString(Navigation.ARG_ARTIST_ID)!!, // Artist ID should be always provided
                     navigateBack = navigation.back,
+                    playbackListener = playbackListener,
                     viewModelFactory = artistSongsViewModelFactory
                 )
             }

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.hours
 import androidx.compose.ui.unit.inSeconds
+import com.georgiyshur.heartask.model.PlaybackListener
 import com.georgiyshur.heartask.model.Song
 import com.georgiyshur.heartask.ui.components.HearError
 import com.georgiyshur.heartask.ui.components.HearProgressBar
@@ -31,6 +32,7 @@ import org.threeten.bp.format.DateTimeFormatter
 fun ArtistSongsScreen(
     artistId: String,
     navigateBack: () -> Unit,
+    playbackListener: PlaybackListener,
     viewModelFactory: ArtistSongsViewModel.AssistedFactory // Temporary workaround, see MainActivity for description
 ) {
     val viewModel = viewModelFactory.create(artistId)
@@ -44,14 +46,17 @@ fun ArtistSongsScreen(
             )
         },
         bodyContent = {
-            SongsList(viewModel)
+            SongsList(viewModel, playbackListener)
         },
         backgroundColor = MaterialTheme.colors.background
     )
 }
 
 @Composable
-private fun SongsList(viewModel: ArtistSongsViewModel) {
+private fun SongsList(
+    viewModel: ArtistSongsViewModel,
+    playbackListener: PlaybackListener
+) {
     val songsDataState by viewModel.songsLiveData.observeAsState()
 
     when (songsDataState) {
@@ -62,7 +67,7 @@ private fun SongsList(viewModel: ArtistSongsViewModel) {
             val songs = (songsDataState as DataState.Loaded<List<Song>>).data
             LazyColumn {
                 itemsIndexed(songs) { index, song ->
-                    SongListItem(song)
+                    SongListItem(song, playbackListener)
                     if (index < songs.size - 1) {
                         Divider(
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -79,13 +84,16 @@ private fun SongsList(viewModel: ArtistSongsViewModel) {
 }
 
 @Composable
-private fun SongListItem(song: Song) {
+private fun SongListItem(
+    song: Song,
+    playbackListener: PlaybackListener
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
                 onClick = {
-                    // TODO play/pause song
+                    playbackListener.play(song)
                 }
             )
             .padding(16.dp)

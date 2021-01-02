@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Hear Task</string>
     <string name="artists_title">Artists</string>
+    <string name="audio_playback">Audio playback</string>
+    <string name="audio_playback_description">Audio playback description</string>
 </resources>
