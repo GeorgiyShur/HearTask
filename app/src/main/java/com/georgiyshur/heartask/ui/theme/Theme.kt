@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 
 private val LightColors = lightColors(
     primary = BlueGrey500,
-    primaryVariant = BlueGrey500,
+    primaryVariant = BlueGrey700,
     secondary = Lime500,
     background = White,
     surface = White,

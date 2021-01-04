@@ -1,16 +1,13 @@
 package com.georgiyshur.heartask.ui
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.setContent
-import com.georgiyshur.heartask.model.PlaybackListener
-import com.georgiyshur.heartask.model.Song
 import com.georgiyshur.heartask.model.service.AudioPlaybackService
 import com.georgiyshur.heartask.viewmodel.ArtistSongsViewModel
+import com.georgiyshur.heartask.viewmodel.PlayerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -24,50 +21,24 @@ class MainActivity : AppCompatActivity() {
      */
     @Inject
     lateinit var artistSongsViewModelFactory: ArtistSongsViewModel.AssistedFactory
-
-    private var audioPlaybackService: AudioPlaybackService? = null
-
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as AudioPlaybackService.AudioServiceBinder
-            audioPlaybackService = binder.service
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            audioPlaybackService = null
-        }
-    }
+    private val playerViewModel by viewModels<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // TODO bind service on play and unbind on stop (atm stop isn't introduced)
+        bindToAudioPlaybackService()
+
         setContent {
             MainScreen(
-                artistSongsViewModelFactory = artistSongsViewModelFactory,
-                object : PlaybackListener {
-                    override fun play(song: Song) {
-                        audioPlaybackService?.playSong(song)
-                    }
-
-                    override fun pause() {
-                        audioPlaybackService?.pause()
-                    }
-
-                    override fun stop() {
-                        audioPlaybackService?.stop()
-                    }
-                }
+                artistSongsViewModelFactory = artistSongsViewModelFactory
             )
         }
-
-        bindToAudioPlaybackService()
     }
 
     private fun bindToAudioPlaybackService() {
-        if (audioPlaybackService == null) {
-            AudioPlaybackService.newIntent(this).also { intent ->
-                bindService(intent, connection, Context.BIND_AUTO_CREATE)
-            }
+        AudioPlaybackService.newIntent(this).also { intent ->
+            bindService(intent, playerViewModel.connection, Context.BIND_AUTO_CREATE)
         }
     }
 }

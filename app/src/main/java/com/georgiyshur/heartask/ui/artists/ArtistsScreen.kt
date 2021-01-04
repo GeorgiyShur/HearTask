@@ -27,7 +27,7 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 @Composable
 fun ArtistsScreen(
     onArtistClick: (String) -> Unit,
-    viewModel: ArtistsViewModel
+    artistsViewModel: ArtistsViewModel
 ) {
     Scaffold(
         topBar = {
@@ -36,7 +36,7 @@ fun ArtistsScreen(
         bodyContent = {
             ArtistsList(
                 onArtistClick = onArtistClick,
-                viewModel = viewModel
+                viewModel = artistsViewModel
             )
         },
         backgroundColor = MaterialTheme.colors.background

@@ -15,13 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.hours
 import androidx.compose.ui.unit.inSeconds
-import com.georgiyshur.heartask.model.PlaybackListener
 import com.georgiyshur.heartask.model.Song
 import com.georgiyshur.heartask.ui.components.HearError
 import com.georgiyshur.heartask.ui.components.HearProgressBar
 import com.georgiyshur.heartask.ui.components.HearTopBar
 import com.georgiyshur.heartask.viewmodel.ArtistSongsViewModel
 import com.georgiyshur.heartask.viewmodel.DataState
+import com.georgiyshur.heartask.viewmodel.PlayerViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
@@ -32,11 +32,11 @@ import org.threeten.bp.format.DateTimeFormatter
 fun ArtistSongsScreen(
     artistId: String,
     navigateBack: () -> Unit,
-    playbackListener: PlaybackListener,
-    viewModelFactory: ArtistSongsViewModel.AssistedFactory // Temporary workaround, see MainActivity for description
+    viewModelFactory: ArtistSongsViewModel.AssistedFactory, // Temporary workaround, see MainActivity for description
+    playerViewModel: PlayerViewModel
 ) {
-    val viewModel = viewModelFactory.create(artistId)
-    val artist by viewModel.artistLiveData.observeAsState()
+    val artistSongsViewModel = viewModelFactory.create(artistId)
+    val artist by artistSongsViewModel.artistLiveData.observeAsState()
 
     Scaffold(
         topBar = {
@@ -46,7 +46,7 @@ fun ArtistSongsScreen(
             )
         },
         bodyContent = {
-            SongsList(viewModel, playbackListener)
+            SongsList(artistSongsViewModel, playerViewModel)
         },
         backgroundColor = MaterialTheme.colors.background
     )
@@ -54,10 +54,10 @@ fun ArtistSongsScreen(
 
 @Composable
 private fun SongsList(
-    viewModel: ArtistSongsViewModel,
-    playbackListener: PlaybackListener
+    artistSongsViewModel: ArtistSongsViewModel,
+    playerViewModel: PlayerViewModel
 ) {
-    val songsDataState by viewModel.songsLiveData.observeAsState()
+    val songsDataState by artistSongsViewModel.songsLiveData.observeAsState()
 
     when (songsDataState) {
         DataState.Loading -> {
@@ -67,7 +67,7 @@ private fun SongsList(
             val songs = (songsDataState as DataState.Loaded<List<Song>>).data
             LazyColumn {
                 itemsIndexed(songs) { index, song ->
-                    SongListItem(song, playbackListener)
+                    SongListItem(song, playerViewModel)
                     if (index < songs.size - 1) {
                         Divider(
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -86,14 +86,14 @@ private fun SongsList(
 @Composable
 private fun SongListItem(
     song: Song,
-    playbackListener: PlaybackListener
+    playerViewModel: PlayerViewModel
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
                 onClick = {
-                    playbackListener.play(song)
+                    playerViewModel.play(song)
                 }
             )
             .padding(16.dp)
