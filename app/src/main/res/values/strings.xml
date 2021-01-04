@@ -3,4 +3,5 @@
     <string name="artists_title">Artists</string>
     <string name="audio_playback">Audio playback</string>
     <string name="audio_playback_description">Audio playback description</string>
+    <string name="playing_now">•  Playing now</string>
 </resources>

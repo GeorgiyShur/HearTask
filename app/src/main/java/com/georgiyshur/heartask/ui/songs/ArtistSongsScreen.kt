@@ -12,9 +12,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.hours
 import androidx.compose.ui.unit.inSeconds
+import com.georgiyshur.heartask.R
+import com.georgiyshur.heartask.model.PlayerState
 import com.georgiyshur.heartask.model.Song
 import com.georgiyshur.heartask.ui.components.HearError
 import com.georgiyshur.heartask.ui.components.HearProgressBar
@@ -58,6 +62,7 @@ private fun SongsList(
     playerViewModel: PlayerViewModel
 ) {
     val songsDataState by artistSongsViewModel.songsLiveData.observeAsState()
+    val playerState by playerViewModel.playerStateLiveData.observeAsState(PlayerState.Idle)
 
     when (songsDataState) {
         DataState.Loading -> {
@@ -67,7 +72,11 @@ private fun SongsList(
             val songs = (songsDataState as DataState.Loaded<List<Song>>).data
             LazyColumn {
                 itemsIndexed(songs) { index, song ->
-                    SongListItem(song, playerViewModel)
+                    SongListItem(
+                        song = song,
+                        isPlaying = songs.any { it.id == (playerState as? PlayerState.Active)?.song?.id },
+                        playerViewModel = playerViewModel
+                    )
                     if (index < songs.size - 1) {
                         Divider(
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -86,8 +95,10 @@ private fun SongsList(
 @Composable
 private fun SongListItem(
     song: Song,
+    isPlaying: Boolean,
     playerViewModel: PlayerViewModel
 ) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,6 +145,14 @@ private fun SongListItem(
                     },
                     style = MaterialTheme.typography.subtitle2
                 )
+                if (isPlaying) {
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.playing_now),
+                        style = MaterialTheme.typography.subtitle2.copy(fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colors.secondary
+                    )
+                }
             }
         }
     }
